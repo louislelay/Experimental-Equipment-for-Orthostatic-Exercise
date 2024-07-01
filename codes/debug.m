@@ -13,14 +13,19 @@
 function debug(varargin)
 
     %% Initialization
-    if exist('dq', 'var') == 0      % In the case "dq" does not exist
-        global dq;                  % Ensure the "dq" variable can be accessed and modified globally.
-        dq = init_dq;               % Initialization of the sensors and the actuators
+    if exist('dq', 'var') == 0          % In the case "dq" does not exist
+        global dq;                      % Ensure the "dq" variable can be accessed and modified globally.
+        dq = init_dq;                   % Initialization of the sensors and the actuators
     end
 
-    clearvars -except varargin dq;  % Clear all previous values that were initialized
+    clearvars -except varargin dq;      % Clear all previous values that were initialized
     
-    filtered = 0;                   % Indicating that the values have never been filtered
+    filtered = 0;                       % Indicating that the values have never been filtered
+    
+    
+    jsonData = fileread('offset.json'); % Read JSON file
+    data = jsondecode(jsonData);        % Parse JSON data
+    offset = data.offset;               % Access vectors
     
     %% Setting up the flags 
     % Create an input parser object
@@ -100,16 +105,11 @@ function debug(varargin)
         end
     
         %% Applying the calibration offsets to the filtered values
-        % Calibrations offsets for BR : -19.3923, 12.3295, -47.1611
-        % Calibrations offsets for BL : 24.1666, 21.9793, -10.259
-        % Calibrations offsets for FR : -9.2644, -2.0409, -61.3825
-        % Calibrations offsets for FL : 30.2709, 30.3597, -12.7457
-    
         % Applying the offset to the filtered values
-        F_BR = F_BR - [-19.3923, 12.3295, -47.1611];
-        F_BL = F_BL - [24.1666, 21.9793, -10.259];
-        F_FR = F_FR - [-9.2644, -2.0409, -61.3825];
-        F_FL = F_FL - [30.2709, 30.3597, -12.7457];
+        F_BR = F_BR - [offset(1), offset(5), offset(9)];
+        F_BL = F_BL - [offset(2), offset(6), offset(10)];
+        F_FR = F_FR - [offset(3), offset(7), offset(11)];
+        F_FL = F_FL - [offset(4), offset(8), offset(12)];
     
         % Displaying the calibrated values from the 4 sensors
         if calib_flag
