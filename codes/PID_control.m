@@ -21,6 +21,10 @@ function PID_control(setpoint, debug_arr)
     prev_filtered_values = 0;
     previous_voltage = zeros(4);
     
+    jsonData = fileread('offset.json'); % Read JSON file
+    data = jsondecode(jsonData);        % Parse JSON data
+    offset = data.offset;               % Access vectors
+
     %% PID Loop (for 50*dt seconds)
     for i = 1:50
         % Get the Current Force Measurement From the Sensor (BR, BL, FR and FN)
@@ -31,22 +35,18 @@ function PID_control(setpoint, debug_arr)
             prev_filtered_values = [temp_f{1}, temp_f{2}, temp_f{3}, temp_f{4}];
         end
     
-        F_BR = lowPassFilter(temp_f{1}, 0.4, 1, prev_filtered_values);
-        F_BL = lowPassFilter(temp_f{2}, 0.4, 2, prev_filtered_values);
-        F_FR = lowPassFilter(temp_f{3}, 0.4, 3, prev_filtered_values);
-        F_FL = lowPassFilter(temp_f{4}, 0.4, 4, prev_filtered_values);
+        F_BR = lowPassFilter(temp_f{1}, 1, prev_filtered_values);
+        F_BL = lowPassFilter(temp_f{2}, 2, prev_filtered_values);
+        F_FR = lowPassFilter(temp_f{3}, 3, prev_filtered_values);
+        F_FL = lowPassFilter(temp_f{4}, 4, prev_filtered_values);
     
         prev_filtered_values = [F_BR, F_BL, F_FR, F_FL];
 
-        % Calibration
-        % Calibrations Values for BR : -19.3923, 12.3295, -47.1611
-        % Calibrations Values for BL : 24.1666, 21.9793, -10.259
-        % Calibrations Values for FR : -9.2644, -2.0409, -61.3825
-        % Calibrations Values for FL : 30.2709, 30.3597, -12.7457
-        F_BR = F_BR - [-19.3923, 12.3295, -47.1611];
-        F_BL = F_BL - [24.1666, 21.9793, -10.259];
-        F_FR = F_FR - [-9.2644, -2.0409, -61.3825];
-        F_FL = F_FL - [30.2709, 30.3597, -12.7457];
+        % Applying the offset to the filtered values
+        F_BR = F_BR - [offset(1), offset(5), offset(9)];
+        F_BL = F_BL - [offset(2), offset(6), offset(10)];
+        F_FR = F_FR - [offset(3), offset(7), offset(11)];
+        F_FL = F_FL - [offset(4), offset(8), offset(12)];
         
         % Calculate the resultant forces for each motor
         force(1) = sqrt((F_BR(1).^2) + (F_BR(2).^2) + (F_BR(3).^2)); % BR
