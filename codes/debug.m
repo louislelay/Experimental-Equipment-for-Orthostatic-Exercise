@@ -21,8 +21,7 @@ function debug(varargin)
     clearvars -except varargin dq;      % Clear all previous values that were initialized
     
     filtered = 0;                       % Indicating that the values have never been filtered
-    
-    
+        
     jsonData = fileread('offset.json'); % Read JSON file
     data = jsondecode(jsonData);        % Parse JSON data
     offset = data.offset;               % Access vectors
@@ -90,14 +89,16 @@ function debug(varargin)
         end
         
         % Filtering the raw values using a low pass filter
-        F_BR = lowPassFilter(temp_f{1}, 0.5, 1, prev_filtered_values);
-        F_BL = lowPassFilter(temp_f{2}, 0.5, 2, prev_filtered_values);
-        F_FR = lowPassFilter(temp_f{3}, 0.5, 3, prev_filtered_values);
-        F_FL = lowPassFilter(temp_f{4}, 0.5, 4, prev_filtered_values);
-        
+        F_BR = lowPassFilter(temp_f{1}, 1, prev_filtered_values);
+        F_BL = lowPassFilter(temp_f{2}, 2, prev_filtered_values);
+        F_FR = lowPassFilter(temp_f{3}, 3, prev_filtered_values);
+        F_FL = lowPassFilter(temp_f{4}, 4, prev_filtered_values);
+
+        prev_filtered_values = [F_BR, F_BL, F_FR, F_FL];
+
         % Displaying the filtered values from the 4 sensors
         if filt_flag
-            disp("Filtered Values.")
+            disp("Filtered Values from Low Pass Filter.")
             disp("Filtered Values of BR : " + F_BR(1) + ", " + F_BR(2) + ", " + F_BR(3));
             disp("Filtered Values of BL : " + F_BL(1) + ", " + F_BL(2) + ", " + F_BL(3));
             disp("Filtered Values of FR : " + F_FR(1) + ", " + F_FR(2) + ", " + F_FR(3));
