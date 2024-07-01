@@ -7,16 +7,20 @@
 % - `debug('-calib')` - Displays calibrated, filtered values.
 % - `debug('-f')` - Displays resultant forces from each motor.
 
-% You can combine arguments to view multiple data sets simultaneously, such as `debug('-filt', '-calib')` to display both filtered and calibrated values.
+% You can combine arguments to view multiple data sets simultaneously, 
+% such as `debug('-filt', '-calib')` to display both filtered and calibrated values.
 
-function test(varargin)
+function debug(varargin)
 
     %% Initialization
-    clear all;                  % Clear all previous values that were initialized
+    if exist('dq', 'var') == 0      % In the case "dq" does not exist
+        global dq;                  % Ensure the "dq" variable can be accessed and modified globally.
+        dq = init_dq;               % Initialization of the sensors and the actuators
+    end
 
-    dq = init_dq;               % Initialization of the sensors and the actuators
+    clearvars -except varargin dq;  % Clear all previous values that were initialized
     
-    filtered = 0;               % Indicating that the values have never been filtered
+    filtered = 0;                   % Indicating that the values have never been filtered
     
     %% Setting up the flags 
     % Create an input parser object
@@ -70,6 +74,7 @@ function test(varargin)
             disp("Raw Values of BL : " + temp_f{2}(1) + ", " + temp_f{2}(2) + ", " + temp_f{2}(3));
             disp("Raw Values of FR : " + temp_f{3}(1) + ", " + temp_f{3}(2) + ", " + temp_f{3}(3));
             disp("Raw Values of FL : " + temp_f{4}(1) + ", " + temp_f{4}(2) + ", " + temp_f{4}(3));
+        end
             
         %% Filtering the raw values from the 4 sensors
         % Initialize the filtered voltage with the first input value
@@ -92,6 +97,7 @@ function test(varargin)
             disp("Filtered Values of BL : " + F_BL(1) + ", " + F_BL(2) + ", " + F_BL(3));
             disp("Filtered Values of FR : " + F_FR(1) + ", " + F_FR(2) + ", " + F_FR(3));
             disp("Filtered Values of FL : " + F_FL(1) + ", " + F_FL(2) + ", " + F_FL(3));
+        end
     
         %% Applying the calibration offsets to the filtered values
         % Calibrations offsets for BR : -19.3923, 12.3295, -47.1611
@@ -112,6 +118,7 @@ function test(varargin)
             disp("Calibrated Values of BL : " + F_BL(1) + ", " + F_BL(2) + ", " + F_BL(3));
             disp("Calibrated Values of FR : " + F_FR(1) + ", " + F_FR(2) + ", " + F_FR(3));
             disp("Calibrated Values of FL : " + F_FL(1) + ", " + F_FL(2) + ", " + F_FL(3));
+        end
     
         %% Calculating the resultant forces for each motor
         force(1) = sqrt((F_BR(1).^2) + (F_BR(2).^2) + (F_BR(3).^2)); % BR
@@ -126,6 +133,7 @@ function test(varargin)
             disp("Measured Force BL : " + force(2));
             disp("Measured Force FR : " + force(3));
             disp("Measured Force FL : " + force(4));
+        end
     
         %% Pause
         pause(1);
