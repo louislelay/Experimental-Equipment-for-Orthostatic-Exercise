@@ -4,6 +4,19 @@ clear all;
 global dq;
 dq = init_dq;
 
+% Read JSON file
+jsonData = fileread('offset.json');
+
+% Parse JSON data
+data = jsondecode(jsonData);
+
+% Access offset
+offset = data.offset;
+
+% Display offset
+disp("Previous Offset : ");
+disp(offset);
+
 % Initialize an array to store the input values
 F_BR_values = [zeros(1, 200), zeros(1, 200), zeros(1, 200)];
 F_BL_values = [zeros(1, 200), zeros(1, 200), zeros(1, 200)];
@@ -47,12 +60,33 @@ disp("Calibrations Values for BL : " + calib_BL(1) + ", " + calib_BL(2) + ", " +
 disp("Calibrations Values for FR : " + calib_FR(1) + ", " + calib_FR(2) + ", " + calib_FR(3));
 disp("Calibrations Values for FL : " + calib_FL(1) + ", " + calib_FL(2) + ", " + calib_FL(3));
 
-
 stop(dq{1});
 stop(dq{2});
 
-% Calibrations Values Previously Gotten :
-% Calibrations Values for BR : -19.3923, 12.3295, -47.1611
-% Calibrations Values for BL : 24.1666, 21.9793, -10.259
-% Calibrations Values for FR : -9.2644, -2.0409, -61.3825
-% Calibrations Values for FL : 30.2709, 30.3597, -12.7457
+% Write it in the JSON file
+data.offset(1) = calib_BR(1);
+data.offset(5) = calib_BR(2);
+data.offset(9) = calib_BR(3);
+
+data.offset(2) = calib_BL(1);
+data.offset(6) = calib_BL(2);
+data.offset(10) = calib_BL(3);
+
+data.offset(3) = calib_FR(1);
+data.offset(7) = calib_FR(2);
+data.offset(11) = calib_FR(3);
+
+data.offset(4) = calib_FL(1);
+data.offset(8) = calib_FL(2);
+data.offset(12) = calib_FL(3);
+
+% Convert back to JSON string
+jsonDataUpdated = jsonencode(data);
+
+% Save updated JSON data to file
+fid = fopen('offset.json', 'w');
+if fid == -1
+    error('Cannot create JSON file');
+end
+fwrite(fid, jsonDataUpdated, 'char');
+fclose(fid);
