@@ -71,13 +71,13 @@ function main(varargin)
     debug_arr = [raw_flag, filt_flag, calib_flag, f_flag];
 
     %% Running the PID loop for 100N
-    setpoint = [100, 100, 100, 100];
+    setpoint = [300, 300, 300, 300];
     PID_control(setpoint, debug_arr);
     
     pause(3);
 
-    %% Running the PID loop for 20N
-    setpoint = [20, 20, 20, 20];
+    %% Running the PID loop for 10N
+    setpoint = [10, 10, 10, 10];
     PID_control(setpoint, debug_arr);
 
     pause(3);
