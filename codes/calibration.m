@@ -17,16 +17,29 @@ offset = data.offset;
 disp("Previous Offset : ");
 disp(offset);
 
+n = 1000;   % number of values to have the mean of 
+
 % Initialize an array to store the input values
-F_BR_values = [zeros(1, 200), zeros(1, 200), zeros(1, 200)];
-F_BL_values = [zeros(1, 200), zeros(1, 200), zeros(1, 200)];
-F_FR_values = [zeros(1, 200), zeros(1, 200), zeros(1, 200)];
-F_FL_values = [zeros(1, 200), zeros(1, 200), zeros(1, 200)];
+F_BR_values_x = zeros(1, n);
+F_BR_values_y = zeros(1, n);
+F_BR_values_z = zeros(1, n);
+
+F_BL_values_x = zeros(1, n);
+F_BL_values_y = zeros(1, n);
+F_BL_values_z = zeros(1, n);
+
+F_FR_values_x = zeros(1, n);
+F_FR_values_y = zeros(1, n);
+F_FR_values_z = zeros(1, n);
+
+F_FL_values_x = zeros(1, n);
+F_FL_values_y = zeros(1, n);
+F_FL_values_z = zeros(1, n);
 
 prev_filtered_values = 0;
 
-% Loop to get 200 input values
-for i = 1:1000
+% Loop to get n input values
+for i = 1:n
     temp_f = read_f(dq);
 
     if prev_filtered_values == 0
@@ -34,25 +47,36 @@ for i = 1:1000
         prev_filtered_values = [temp_f{1}, temp_f{2}, temp_f{3}, temp_f{4}];
     end
 
-    F_BR = lowPassFilter(temp_f{1}, 0.5, 1, prev_filtered_values);
-    F_BL = lowPassFilter(temp_f{2}, 0.5, 2, prev_filtered_values);
-    F_FR = lowPassFilter(temp_f{3}, 0.5, 3, prev_filtered_values);
-    F_FL = lowPassFilter(temp_f{4}, 0.5, 4, prev_filtered_values);
+    F_BR = lowPassFilter(temp_f{1}, 1, prev_filtered_values);
+    F_BL = lowPassFilter(temp_f{2}, 2, prev_filtered_values);
+    F_FR = lowPassFilter(temp_f{3}, 3, prev_filtered_values);
+    F_FL = lowPassFilter(temp_f{4}, 4, prev_filtered_values);
     
     prev_filtered_values = [F_BR, F_BL, F_FR, F_FL];
-    F_BR_values= F_BR;
-    F_BL_values= F_BL;
-    F_FR_values = F_FR;
-    F_FL_values = F_FL;
+    F_BR_values_x = F_BR(1);
+    F_BR_values_y = F_BR(2);
+    F_BR_values_z = F_BR(3);
+    
+    F_BL_values_x = F_BL(1);
+    F_BL_values_y = F_BL(2);
+    F_BL_values_z = F_BL(3);
+    
+    F_FR_values_x = F_FR(1);
+    F_FR_values_y = F_FR(2);
+    F_FR_values_z = F_FR(3);
+    
+    F_FL_values_x = F_FL(1);
+    F_FL_values_y = F_FL(2);
+    F_FL_values_z = F_FL(3);
 
     pause(0.1);
 end
 
 % Calculate the mean of the input values
-calib_BR = [mean(F_BR_values(1)), mean(F_BR_values(2)), mean(F_BR_values(3))];
-calib_BL = [mean(F_BL_values(1)), mean(F_BL_values(2)), mean(F_BL_values(3))];
-calib_FR = [mean(F_FR_values(1)), mean(F_FR_values(2)), mean(F_FR_values(3))];
-calib_FL = [mean(F_FL_values(1)), mean(F_FL_values(2)), mean(F_FL_values(3))];
+calib_BR = [mean(F_BR_values_x), mean(F_BR_values_y), mean(F_BR_values_z)];
+calib_BL = [mean(F_BL_values_x), mean(F_BL_values_y), mean(F_BL_values_z)];
+calib_FR = [mean(F_FR_values_x), mean(F_FR_values_y), mean(F_FR_values_z)];
+calib_FL = [mean(F_FL_values_x), mean(F_FL_values_y), mean(F_FL_values_z)];
 
 % Display the mean value
 disp("Calibrations Values for BR : " + calib_BR(1) + ", " + calib_BR(2) + ", " + calib_BR(3));
