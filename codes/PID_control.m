@@ -85,13 +85,14 @@ function PID_control(setpoint, debug_arr)
             disp("Raw Values of FL : " + temp_f{4}(1) + ", " + temp_f{4}(2) + ", " + temp_f{4}(3));
         end
 
-                % Displaying the filtered values from the 4 sensors
-        if filt_flag
+        % Displaying the filtered values from the 4 sensors
+        if debug_arr(2)
             disp("Filtered Values.")
             disp("Filtered Values of BR : " + F_BR(1) + ", " + F_BR(2) + ", " + F_BR(3));
             disp("Filtered Values of BL : " + F_BL(1) + ", " + F_BL(2) + ", " + F_BL(3));
             disp("Filtered Values of FR : " + F_FR(1) + ", " + F_FR(2) + ", " + F_FR(3));
             disp("Filtered Values of FL : " + F_FL(1) + ", " + F_FL(2) + ", " + F_FL(3));
+        end
 
         % Displaying the calibrated values from the 4 sensors
         if debug_arr(3)
@@ -100,6 +101,7 @@ function PID_control(setpoint, debug_arr)
             disp("Calibrated Values of BL : " + F_BL(1) + ", " + F_BL(2) + ", " + F_BL(3));
             disp("Calibrated Values of FR : " + F_FR(1) + ", " + F_FR(2) + ", " + F_FR(3));
             disp("Calibrated Values of FL : " + F_FL(1) + ", " + F_FL(2) + ", " + F_FL(3));
+        end
         
         % Displaying the resultant forces values from the 4 sensors
         if debug_arr(4)
@@ -108,6 +110,7 @@ function PID_control(setpoint, debug_arr)
             disp("Measured Force BL: " + force(2) + " and Voltage: " + voltage(2));
             disp("Measured Force FR: " + force(3) + " and Voltage: " + voltage(3));
             disp("Measured Force FL: " + force(4) + " and Voltage: " + voltage(4));
+        end
     
     
         %% Launch Motor
