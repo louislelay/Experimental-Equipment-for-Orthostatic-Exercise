@@ -10,7 +10,7 @@
 % You can combine arguments to view multiple data sets simultaneously, 
 % such as `debug('-filt', '-calib')` to display both filtered and calibrated values.
 
-function get_values(varargin)
+function get_values(name, varargin)
 
     %% Initialization
     if exist('dq', 'var') == 0          % In the case "dq" does not exist
@@ -18,7 +18,7 @@ function get_values(varargin)
         dq = init_dq;                   % Initialization of the sensors and the actuators
     end
 
-    clearvars -except varargin dq;      % Clear all previous values that were initialized
+    clearvars -except varargin dq name;      % Clear all previous values that were initialized
     
     filtered = 0;                       % Indicating that the values have never been filtered
         
@@ -26,11 +26,9 @@ function get_values(varargin)
     data = jsondecode(jsonData);        % Parse JSON data
     offset = data.offset;               % Access vectors
 
-    
-
     jsonDataStored = fileread('sit_to_stand.json'); % Read JSON file
     stored_data = jsondecode(jsonDataStored);        % Parse JSON data
-    sit_to_stand = stored_data.sit_to_stand;               % Access vectors
+    name = stored_data.name;               % Access vectors
     
     %% Setting up the flags 
     % Create an input parser object
@@ -157,7 +155,7 @@ function get_values(varargin)
             disp("Measured Force FL : " + force(4));
         end
         
-        sit_to_stand = [sit_to_stand; force]; % Append the new force data to the array
+        name = [name; force]; % Append the new force data to the array
 
         % Pause
         pause(sec/n);
@@ -166,7 +164,7 @@ function get_values(varargin)
     display("end of the inclination")
 
     % Convert back to JSON string
-    stored_data.sit_to_stand = sit_to_stand; % Update the stored data
+    stored_data.name = name; % Update the stored data
     jsonDataUpdated = jsonencode(stored_data);
     
     % Save updated JSON data to file
