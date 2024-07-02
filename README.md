@@ -1,10 +1,10 @@
 # Experimental Equipment for Orthostatic Exercise
 
-The Experimental Equipment for Orthostatic Exercise project, developed by the Real World Informatics Lab at the University of Tokyo, is designed to aid individuals in standing up from a soft chair.
+The Experimental Equipment for Orthostatic Exercise project, developed by the Real World Robot Informatics Lab at the University of Tokyo, is designed to aid individuals in standing up from a soft chair.
 
 ![Experimental Equipment](medias/experimental_equipment.jpg?raw=true)
 
-[Real World Informatics Lab's Website](https://www.robot.t.u-tokyo.ac.jp/yamalab/index.html)
+[Real World Robot Informatics Lab's Website](https://www.robot.t.u-tokyo.ac.jp/yamalab/index.html)
 
 [Qi An's Website](https://www.robot.t.u-tokyo.ac.jp/anlab/)
 
