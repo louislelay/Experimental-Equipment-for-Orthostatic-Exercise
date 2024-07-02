@@ -49,3 +49,7 @@ To analyze the values and create a program that detects variations, we need to s
 ## CAD
 
 The "cad" folder contains the SolidWorks CAD files for the project.
+
+![CAD screenshot](medias/cad.png?raw=true)
+
+![Plans screenshot](medias/plans.png?raw=true)
