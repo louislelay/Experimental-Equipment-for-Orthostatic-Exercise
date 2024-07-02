@@ -16,7 +16,7 @@ The project is implemented in MATLAB. Ensure you have MATLAB installed along wit
 
 Additionally, two National Instruments libraries are required to interface with the National Instruments USB-6009 device. The executables, named "ni-daqmx_24.3_online.exe" and "ni-system-configuration_24.3_online.exe," are located at the root of the project.
 
-All code files are located in the "codes" folder.
+All code files are located in the "src" folder.
 
 ### Calibration
 
