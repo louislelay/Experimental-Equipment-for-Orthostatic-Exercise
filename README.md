@@ -36,6 +36,10 @@ You can combine arguments to view multiple data sets simultaneously, such as `de
 
 These arguments are also applicable to the "main.m" program.
 
+### Storing Data
+
+To analyze the values and create a program that detects variations, we need to store data on the force evolution when someone is standing up from the chair. This is why we developed the program "get_values.m," which collects sensor information and stores it in "data_stored.mat." Each time, it will prompt for a name to be associated with the new data.
+
 ## CAD
 
 The "cad" folder contains the SolidWorks CAD files for the project.
