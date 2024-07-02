@@ -26,6 +26,8 @@ function get_values(varargin)
     data = jsondecode(jsonData);        % Parse JSON data
     offset = data.offset;               % Access vectors
 
+    
+
     jsonDataStored = fileread('sit_to_stand.json'); % Read JSON file
     stored_data = jsondecode(jsonDataStored);        % Parse JSON data
     sit_to_stand = stored_data.sit_to_stand;               % Access vectors
@@ -68,6 +70,9 @@ function get_values(varargin)
     if strcmp(arg1, '-f') || strcmp(arg2, '-f') || strcmp(arg3, '-f') || strcmp(arg4, '-f')
         f_flag = true;
     end
+   
+    % Creating the array with the flag for the debugging
+    debug_arr = [raw_flag, filt_flag, calib_flag, f_flag];
 
     %% Running the PID loop for 10N
     setpoint = [10, 10, 10, 10];
@@ -77,7 +82,7 @@ function get_values(varargin)
 
     %% Beginning of the loop for 5 secs
 
-    displaying("Incline yourself, you have 5 second starting from now");
+    disp("Incline yourself, you have 5 second starting from now");
     n = 100;
     sec = 5;
 
@@ -152,7 +157,7 @@ function get_values(varargin)
             disp("Measured Force FL : " + force(4));
         end
         
-        stored_data.sit_to_stand = append(stored_data.sit_to_stand, [force(1), force(2), force(3), force(4)]);
+        sit_to_stand = [sit_to_stand; force]; % Append the new force data to the array
 
         % Pause
         pause(sec/n);
@@ -161,6 +166,7 @@ function get_values(varargin)
     display("end of the inclination")
 
     % Convert back to JSON string
+    stored_data.sit_to_stand = sit_to_stand; % Update the stored data
     jsonDataUpdated = jsonencode(stored_data);
     
     % Save updated JSON data to file
