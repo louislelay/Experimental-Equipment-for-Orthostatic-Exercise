@@ -10,7 +10,7 @@
 % You can combine arguments to view multiple data sets simultaneously, 
 % such as `debug('-filt', '-calib')` to display both filtered and calibrated values.
 
-function get_values(name, varargin)
+function get_values(varargin)
 
     %% Initialization
     if exist('dq', 'var') == 0          % In the case "dq" does not exist
@@ -26,9 +26,17 @@ function get_values(name, varargin)
     data = jsondecode(jsonData);        % Parse JSON data
     offset = data.offset;               % Access vectors
 
-    jsonDataStored = fileread('sit_to_stand.json'); % Read JSON file
-    stored_data = jsondecode(jsonDataStored);        % Parse JSON data
-    name = stored_data.name;               % Access vectors
+    data_to_store = struct();
+    data_to_store.name = input("What will be the name of the data : ", 's');
+    data_to_store.F_BR_arr = [];
+    data_to_store.F_BL_arr = [];
+    data_to_store.F_FR_arr = [];
+    data_to_store.F_FL_arr = [];
+
+    F_BR_arr = [];
+    F_BL_arr = [];
+    F_FR_arr = [];
+    F_FL_arr = [];
     
     %% Setting up the flags 
     % Create an input parser object
@@ -74,30 +82,40 @@ function get_values(name, varargin)
 
     %% Running the PID loop for 10N
     setpoint = [10, 10, 10, 10];
-    PID_control(setpoint, debug_arr);
 
+    disp("Running the PID Loop aiming for 10N.");
+    PID_control(setpoint, debug_arr);
+    
     pause(3);
+    disp("End of the loop.");
 
     %% Beginning of the loop for 5 secs
 
-    disp("Incline yourself, you have 5 second starting from now");
+    disp("The recording (10sec) will begin in 3 seconds, you will incline yourself when told so.");
+
+    disp("3 sec remaining before the beginning of the recording.");
+
+    pause(1);
+    disp("2 sec remaining before the beginning of the recording.");
+
+    pause(1);
+    disp("1 sec remaining before the beginning of the recording.");
+
+    pause(1);
+    disp("Beginning of the recording.");
+    
     n = 100;
-    sec = 5;
+    sec = 10;
 
     % Infinite loop : Displaying the values
     for i = 1:n
+
+        if i == n/2
+            disp("You will now incline yourself.");
+        end
     
         % Getting the raw values from the 4 sensors (BR, BL, FR, FL)
-        temp_f = read_f(dq);    
-        
-        % Displaying the raw values from the 4 sensors
-        if raw_flag
-            disp("Raw Values.")
-            disp("Raw Values of BR : " + temp_f{1}(1) + ", " + temp_f{1}(2) + ", " + temp_f{1}(3));
-            disp("Raw Values of BL : " + temp_f{2}(1) + ", " + temp_f{2}(2) + ", " + temp_f{2}(3));
-            disp("Raw Values of FR : " + temp_f{3}(1) + ", " + temp_f{3}(2) + ", " + temp_f{3}(3));
-            disp("Raw Values of FL : " + temp_f{4}(1) + ", " + temp_f{4}(2) + ", " + temp_f{4}(3));
-        end
+        temp_f = read_f(dq);
             
         % Filtering the raw values from the 4 sensors
         % Initialize the filtered voltage with the first input value
@@ -114,15 +132,6 @@ function get_values(name, varargin)
         F_FL = lowPassFilter(temp_f{4}, 4, prev_filtered_values);
 
         prev_filtered_values = [F_BR, F_BL, F_FR, F_FL];
-
-        % Displaying the filtered values from the 4 sensors
-        if filt_flag
-            disp("Filtered Values from Low Pass Filter.")
-            disp("Filtered Values of BR : " + F_BR(1) + ", " + F_BR(2) + ", " + F_BR(3));
-            disp("Filtered Values of BL : " + F_BL(1) + ", " + F_BL(2) + ", " + F_BL(3));
-            disp("Filtered Values of FR : " + F_FR(1) + ", " + F_FR(2) + ", " + F_FR(3));
-            disp("Filtered Values of FL : " + F_FL(1) + ", " + F_FL(2) + ", " + F_FL(3));
-        end
     
         % Applying the calibration offsets to the filtered values
         % Applying the offset to the filtered values
@@ -130,15 +139,6 @@ function get_values(name, varargin)
         F_BL = F_BL - [offset(2), offset(6), offset(10)];
         F_FR = F_FR - [offset(3), offset(7), offset(11)];
         F_FL = F_FL - [offset(4), offset(8), offset(12)];
-    
-        % Displaying the calibrated values from the 4 sensors
-        if calib_flag
-            disp("Calibrated and Filtered Values.")
-            disp("Calibrated Values of BR : " + F_BR(1) + ", " + F_BR(2) + ", " + F_BR(3));
-            disp("Calibrated Values of BL : " + F_BL(1) + ", " + F_BL(2) + ", " + F_BL(3));
-            disp("Calibrated Values of FR : " + F_FR(1) + ", " + F_FR(2) + ", " + F_FR(3));
-            disp("Calibrated Values of FL : " + F_FL(1) + ", " + F_FL(2) + ", " + F_FL(3));
-        end
     
         % Calculating the resultant forces for each motor
         force(1) = sqrt((F_BR(1).^2) + (F_BR(2).^2) + (F_BR(3).^2)); % BR
@@ -155,23 +155,39 @@ function get_values(name, varargin)
             disp("Measured Force FL : " + force(4));
         end
         
-        name = [name; force]; % Append the new force data to the array
+        % Append the new force data to the array
+        F_BR_arr = [F_BR_arr, force(1)];
+        F_BL_arr = [F_BL_arr, force(2)];
+        F_FR_arr = [F_FR_arr, force(3)];
+        F_FL_arr = [F_FL_arr, force(4)];
 
         % Pause
         pause(sec/n);
 
     end 
-    display("end of the inclination")
 
-    % Convert back to JSON string
-    stored_data.name = name; % Update the stored data
-    jsonDataUpdated = jsonencode(stored_data);
+    display("End of the time")
+
+    % Update the stored data
+    data_to_store.F_BR_arr = F_BR_arr;
+    data_to_store.F_BL_arr = F_BL_arr;
+    data_to_store.F_FR_arr = F_FR_arr;
+    data_to_store.F_FL_arr = F_FL_arr;
     
-    % Save updated JSON data to file
-    fid = fopen('sit_to_stand.json', 'w');
-    if fid == -1
-        error('Cannot create JSON file');
+    fileName = 'stored_data.mat';
+
+    if isfile(fileName)
+        % Load existing data
+        existingData = load(fileName);
+    
+        % Append the new data
+        data_stored = existingData.data_stored;
+        data_stored(end+1).data_stored = data_to_store;
+    else
+        % File does not exist, create a new structure with the data
+        data_stored = struct('data_stored', data_to_store);
     end
-    fwrite(fid, jsonDataUpdated, 'char');
-    fclose(fid);
+    
+    % Save the data structure to the file
+    save(fileName, 'data_stored');
 end
