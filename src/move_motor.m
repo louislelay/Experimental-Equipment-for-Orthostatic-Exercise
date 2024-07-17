@@ -3,7 +3,7 @@ function move_motor(motor_type, voltage)
     global dq;
 
     if sum(voltage < -1.5) > 0 || sum(voltage > 1.5) > 0
-        %disp("Input is outside the -1.5 to 1.5 V range");
+        disp("Input is outside the -1.5 to 1.5 V range");
         return
     end
 

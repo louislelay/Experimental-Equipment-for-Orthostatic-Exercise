@@ -71,13 +71,14 @@ function get_values(varargin)
     name = input("Name of the person : ", 's');
 
     %% Running the PID loop for 10N
-    setpoint = [10, 10, 10, 10];
+    setpoint = [30, 30, 30, 30];
 
-    disp("---")
+    disp("---");
+    time_sleep = 10;
 
     disp("Running the PID Loop aiming for 10N.");
-    PID_control(setpoint, debug_arr);
-    pause(3);
+    PID_control(setpoint, time_sleep, debug_arr);
+
     disp("End of the PID loop.");
 
     %% Runnin 10 time the loop for 5 secs
@@ -189,14 +190,6 @@ function get_values(varargin)
         end
         % Save the data structure to the file
         save(fileName, 'data_stored');
-        
-        disp('----')
-        disp("Running the PID Loop aiming for 10N.");
-        PID_control(setpoint, debug_arr);
-        pause(1);
-        disp("End of the PID loop.");
-
-
     end
     disp("----------")
     disp("End");

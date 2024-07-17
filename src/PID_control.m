@@ -3,7 +3,7 @@
 % using the motors. That's why is will take in argument a value to aim for
 % and an array telling what values to display for the debugging process.
 
-function PID_control(setpoint, debug_arr)
+function PID_control(setpoint, time_sleep, debug_arr)
     %% Initialization
     global dq;                          % Set dq as a global value
     
@@ -25,8 +25,10 @@ function PID_control(setpoint, debug_arr)
     data = jsondecode(jsonData);        % Parse JSON data
     offset = data.offset;               % Access vectors
 
+    n = time_sleep/dt;
+
     %% PID Loop (for 50*dt seconds)
-    for i = 1:50
+    for i = 1:n
         % Get the Current Force Measurement From the Sensor (BR, BL, FR and FN)
         temp_f = read_f(dq);
         
@@ -122,8 +124,18 @@ function PID_control(setpoint, debug_arr)
                     move_motor(motor_type(i), voltage(i));
                     previous_voltage(i) = voltage(i);
                 else
-                    move_motor(motor_type(i), 0);
-                    previous_voltage(i) = voltage(i);
+                    if abs(voltage(i)) > 0.3
+                        if voltage(i) > 0
+                            sig = 1;
+                        else
+                            sig = -1;
+                        end
+                        move_motor(motor_type(i), sig*0.7);
+                        previous_voltage(i) = voltage(i);
+                    else
+                        move_motor(motor_type(i), 0);
+                        previous_voltage(i) = voltage(i);
+                    end
                 end
             end
 

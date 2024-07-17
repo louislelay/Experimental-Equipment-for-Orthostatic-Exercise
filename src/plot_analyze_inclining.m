@@ -51,7 +51,7 @@ subplot(2, 2, 4);
 hold on;
 title('F\_BL\_arr values over time');
 xlabel('Time (s)');
-ylabel('F\_BL\_arr values');
+ylabel('F\_BL_arr values');
 for i = 1:length(structArray)
     plot(time, structArray(i).data_stored.F_BL_arr, 'DisplayName', structArray(i).data_stored.name);
 end

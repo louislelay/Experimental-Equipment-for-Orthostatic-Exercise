@@ -71,16 +71,14 @@ function main(varargin)
     debug_arr = [raw_flag, filt_flag, calib_flag, f_flag];
 
     %% Running the PID loop for 100N
-    setpoint = [300, 300, 300, 300];
-    PID_control(setpoint, debug_arr);
+    %setpoint = [300, 300, 300, 300];
+    % time_sleep = 3;
+    %PID_control(setpoint, time_sleep, debug_arr);
     
-    pause(3);
-
     %% Running the PID loop for 10N
-    setpoint = [10, 10, 10, 10];
-    PID_control(setpoint, debug_arr);
-
-    pause(3);
+    setpoint = [30, 30, 30, 30];
+    time_sleep = 15;
+    PID_control(setpoint, time_sleep, debug_arr);
 
     %% Stopping the communication with the drivers
     stop(dq{1});

@@ -1,19 +1,22 @@
-fileName = 'stored_data_mat.mat';
-data_to_store = struct();
-data_to_store.name= 'Lois';
-data_to_store.value = [5,3];
-
-if isfile(fileName)
-    % Load existing data
-    existingData = load(fileName);
-
-    % Append the new data
-    data_stored = existingData.data_stored;
-    data_stored(end+1).data_stored = data_to_store;
-else
-    % File does not exist, create a new structure with the data
-    data_stored = struct('data_stored', data_to_store);
+%% Initialization
+if exist('dq', 'var') == 0      % In the case "dq" does not exist
+    global dq;                  % Ensure the "dq" variable can be accessed and modified globally.
+    dq = init_dq;               % Initialization of the sensors and the actuators
 end
 
-% Save the data structure to the file
-save(fileName, 'data_stored');
+clearvars -except varargin dq;  % Clear all previous values that were initialized
+
+
+
+
+move_motor("BR", 0.7)
+pause(1)
+move_motor("BL", -0.7)
+pause(1)
+move_motor("FL", -0.7)
+pause(1)
+move_motor("ALL", 0)
+
+%% Stopping the communication with the drivers
+stop(dq{1});
+stop(dq{2});

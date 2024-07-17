@@ -1,4 +1,5 @@
 % Use this program to get the calibration values of the different forces
+% first déserrez les straps
 clear all;
 
 global dq;
@@ -17,7 +18,7 @@ offset = data.offset;
 disp("Previous Offset : ");
 disp(offset);
 
-n = 1000;   % number of values to have the mean of 
+n = 5000;   % number of values to have the mean of 
 
 % Initialize an array to store the input values
 F_BR_values_x = zeros(1, n);
