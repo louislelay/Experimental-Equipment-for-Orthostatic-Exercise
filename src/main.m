@@ -77,7 +77,7 @@ function main(varargin)
     
     %% Running the PID loop for 10N
     setpoint = [30, 30, 30, 30];
-    time_sleep = 15;
+    time_sleep = 3;
     PID_control(setpoint, time_sleep, debug_arr);
 
     %% Stopping the communication with the drivers
