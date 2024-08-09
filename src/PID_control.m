@@ -71,7 +71,7 @@ function PID_control(setpoint, time_sleep, debug_arr)
             output(i) = Kp * error(i) + Ki * integral(i) + Kd * derivative(i);
         
             % Clamp Output to Range [-1.5, 1.5]
-            voltage(i) = max(min(output(i), 1.5), -1.5);
+            voltage(i) = max(min(output(i), 5), -5);
         
             % Update Previous Error
             previous_error(i) = error(i);
