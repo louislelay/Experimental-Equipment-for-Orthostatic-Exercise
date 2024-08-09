@@ -70,21 +70,22 @@ function get_values(varargin)
 
     name = input("Name of the person : ", 's');
 
-    %% Running the PID loop for 10N
-    setpoint = [30, 30, 30, 30];
-
-    disp("---");
-    time_sleep = 10;
-
-    disp("Running the PID Loop aiming for 10N.");
-    PID_control(setpoint, time_sleep, debug_arr);
-
-    disp("End of the PID loop.");
-
     %% Runnin 10 time the loop for 5 secs
     for k = 1:10
 
-        disp("----------")
+        disp("----------");
+        input("Press enter to begin 30 N", "s");
+
+        %% Running the PID loop for 30N
+        setpoint = [30, 30, 30, 30];
+    
+        disp("---");
+        time_sleep = 5;
+    
+        disp("Running the PID Loop aiming for 10N.");
+        PID_control(setpoint, time_sleep, debug_arr);
+    
+        disp("End of the PID loop.");
 
         %% Initialization of the data to store
         data_to_store = struct();
