@@ -13,7 +13,7 @@ data = jsondecode(jsonData);        % Parse JSON data
 offset = data.offset;               % Access vectors
 
 setpoint = [30, 30, 30, 30];
-time_sleep = 5;
+time_sleep = 4;
 debug_arr = [false, false, false, false];
 PID_control(setpoint, time_sleep, debug_arr);
 
@@ -61,7 +61,7 @@ while flag
 
     if ((force(1) < 20) || (force(2) < 25)) && ((force(3) > 45) || (force(4) > 35))
         setpoint = [300,300,300,300];
-        time_sleep = 3;
+        time_sleep = 1.5;
         PID_control(setpoint, time_sleep, debug_arr);
         flag = false;
     end
