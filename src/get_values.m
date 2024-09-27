@@ -78,7 +78,8 @@ function get_values(varargin)
 
         %% Running the PID loop for 30N
         setpoint = [30, 30, 30, 30];
-    
+        %setpoint = [300, 300, 300, 300];
+
         disp("---");
         time_sleep = 5;
     
@@ -102,7 +103,7 @@ function get_values(varargin)
 
         %% Storing the data
         disp("Recording n°"+ k +" (7 sec), you will incline yourself when told so.");
-        input("Press enter to begin", "s");
+        % input("Press enter to begin", "s");
         disp("Beginning of the recording.");
         
         n = 100;
@@ -175,7 +176,8 @@ function get_values(varargin)
         data_to_store.F_FR_arr = F_FR_arr;
         data_to_store.F_FL_arr = F_FL_arr;
         
-        fileName = 'stored_data.mat';
+        fileName = 'experiment_data_soft.mat';
+        %fileName = 'experiment_data_tighten.mat';
     
         if isfile(fileName)
             % Load existing data

@@ -13,9 +13,9 @@ figure;
 % Subplot for F_FR_arr
 subplot(2, 2, 1);
 hold on;
-title('F\_FR\_arr values over time');
+title('FR force values over time ');
 xlabel('Time (s)');
-ylabel('F\_FR\_arr values');
+ylabel('FR force (N)');
 for i = 1:length(structArray)
     plot(time, structArray(i).data_stored.F_FR_arr, 'DisplayName', structArray(i).data_stored.name);
 end
@@ -25,9 +25,9 @@ hold off;
 % Subplot for F_FL_arr
 subplot(2, 2, 2);
 hold on;
-title('F\_FL\_arr values over time');
+title('FL force values over time');
 xlabel('Time (s)');
-ylabel('F\_FL\_arr values');
+ylabel('FL force (N)');
 for i = 1:length(structArray)
     plot(time, structArray(i).data_stored.F_FL_arr, 'DisplayName', structArray(i).data_stored.name);
 end
@@ -37,9 +37,9 @@ hold off;
 % Subplot for F_BR_arr
 subplot(2, 2, 3);
 hold on;
-title('F\_BR\_arr values over time');
+title('BR force values over time');
 xlabel('Time (s)');
-ylabel('F\_BR\_arr values');
+ylabel('BR force (N)');
 for i = 1:length(structArray)
     plot(time, structArray(i).data_stored.F_BR_arr, 'DisplayName', structArray(i).data_stored.name);
 end
@@ -49,9 +49,9 @@ hold off;
 % Subplot for F_BL_arr
 subplot(2, 2, 4);
 hold on;
-title('F\_BL\_arr values over time');
+title('BL force values over time');
 xlabel('Time (s)');
-ylabel('F\_BL_arr values');
+ylabel('BL force (N)');
 for i = 1:length(structArray)
     plot(time, structArray(i).data_stored.F_BL_arr, 'DisplayName', structArray(i).data_stored.name);
 end
